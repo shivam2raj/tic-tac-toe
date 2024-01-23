@@ -3,35 +3,46 @@
     export default function Board () {
 
         const [cell,setCell] = useState({
-            row: null,
-            col: null
+            row: '',
+            col: ''
         });
+
+        // const[isClicked, SetIsClicked] = useState([{
+        //     row: null,
+        //     col: null
+        // }])
+        async function fetchResult () {
+        
+                    const response = await fetch("http://localhost:3000/player-move",
+                            {
+                        method: 'POST',
+                        headers: {
+                                   'Content-Type': 'application/json', 
+                                   'rowIndex' : cell.row,
+                                   'colIndex' : cell.col
+                                 }
+                    })
+
+                    const data =  await response.json();
+
+                    console.log(data);
+                }
 
         function handleKeyPress(rowIndex, colIndex){
 
             setCell((k) => ({...k, row: rowIndex, col: colIndex}));
+ 
+            // SetIsClicked((k) => [...k, {row: rowIndex, col: colIndex}])
+
+            console.log(rowIndex + " " + colIndex);
+
+            fetchResult();
 
         }
          
 
-        async function fetchResult () {
 
-            const response = await fetch("http://localhost:3000/player-move",
-            {
-                method: 'POST',
-                headers: {
-                           'Content-Type': 'application/json', 
-                           'rowIndex' : cell.row,
-                           'colIndex' : cell.col
-                         }
-            })
-        }
-
-        useEffect(()=> {
-            fetchResult();
-        }
-         , [cell]);
-
+    
         return <div className="container h-[50vh] w-[30vw] flex flex-wrap">
 
         

@@ -16,6 +16,17 @@ const board = [
     ["", "", ""],
 ];
 
+
+function clearBoard () {
+
+    for (i=0;i<board.length;i++) 
+    {
+        for(j=0;j<board[i].length;j++)
+        {
+            board[i][j] = "";
+        }
+    }
+}
 function playerMove(col, row, value) {
     board[col][row] = value;
 }
@@ -106,18 +117,19 @@ app.post("/player-move", (req, res) => {
 
     playerMove(colIndex, rowIndex, "x");
 
-    iterateBoard();
+    const autoMove = computerMove();
 
-    computerMove();
+    console.log(iterateBoard());
 
-    let winner = checkWinner();
+    const winner = checkWinner();
 
     if(winner)
     {
-        res.send("the winner is " + winner);
+        res.json({won: winner});
+        clearBoard();
     }
     else{
-        res.status(200).send("player has successfully moved");
+        res.status(200).json({move: autoMove});
     }
 
 });
